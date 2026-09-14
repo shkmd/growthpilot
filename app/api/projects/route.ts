@@ -1,0 +1,6 @@
+import {body,db,fail,owner,textValue,HttpError} from '@/lib/server';
+import {validateUrl} from '@/lib/crawler';
+function checkedUrl(raw:string){try{return validateUrl(raw).href}catch(e){throw new HttpError(400,e instanceof Error?e.message:'Invalid website URL.')}}
+export async function GET(){try{const user=await owner();const result=await db().prepare('SELECT id,name,url,country,language,created_at FROM projects WHERE owner = ? ORDER BY created_at DESC').bind(user).all();return Response.json({projects:result.results},{headers:{'Cache-Control':'private, no-store'}})}catch(e){return fail(e)}}
+export async function POST(request:Request){try{const user=await owner(request),b=await body(request);const p={id:crypto.randomUUID(),name:textValue(b.name,80),url:checkedUrl(textValue(b.url,2048)),country:textValue(b.country,80),language:textValue(b.language,80)};const result=await db().prepare('INSERT OR IGNORE INTO projects (id,owner,name,url,country,language,created_at) VALUES (?,?,?,?,?,?,?)').bind(p.id,user,p.name,p.url,p.country,p.language,new Date().toISOString()).run();if(!result.meta.changes)throw new HttpError(409,'The free plan supports one website. Select your existing project from the workspace menu.');return Response.json({project:p},{status:201})}catch(e){return fail(e)}}
+
