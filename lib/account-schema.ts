@@ -3,4 +3,6 @@ export const accountStatements = [
  `CREATE TABLE IF NOT EXISTS sessions (token TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), expires INTEGER NOT NULL, created_at TEXT NOT NULL)`,
  `CREATE INDEX IF NOT EXISTS sessions_user ON sessions(user_id)`,
  `CREATE TABLE IF NOT EXISTS auth_attempts (key TEXT PRIMARY KEY, count INTEGER NOT NULL, expires INTEGER NOT NULL)`
+ ,`CREATE TABLE IF NOT EXISTS google_connections (user_id TEXT PRIMARY KEY REFERENCES users(id), access_token TEXT NOT NULL, refresh_token TEXT NOT NULL, expires_at INTEGER NOT NULL, property_id TEXT, created_at TEXT NOT NULL, updated_at TEXT NOT NULL)`
+ ,`CREATE TABLE IF NOT EXISTS google_oauth_states (state TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id), expires_at INTEGER NOT NULL)`
 ];
