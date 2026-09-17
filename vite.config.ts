@@ -13,6 +13,7 @@ const { d1, r2 } = hostingConfig;
 // macOS Seatbelt blocks FSEvents, so Codex previews need polling for HMR.
 const isCodexSeatbeltSandbox = process.env.CODEX_SANDBOX === "seatbelt";
 const managedLinux = readExecutionProfile() === "managed-linux";
+const railwayNode = process.env.GROWTHPILOT_NODE === '1';
 
 const localBindingConfig = {
   main: "vinext/server/fetch-handler",
@@ -52,15 +53,15 @@ export default defineConfig(async ({ command }) => {
   const { cloudflare } = await import("@cloudflare/vite-plugin");
 
   return {
-    resolve: { alias: process.platform === 'win32' && command === 'serve' ? [{find:'cloudflare:workers',replacement:fileURLToPath(new URL('./lib/local-bindings.ts', import.meta.url))}] : [] },
+    resolve: { alias: railwayNode || (process.platform === 'win32' && command === 'serve') ? [{find:'cloudflare:workers',replacement:fileURLToPath(new URL('./lib/local-bindings.ts', import.meta.url))}] : [] },
     server: {
       ...(managedLinux ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] } : {}),
       ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
     },
     plugins: [
       vinext(),
-      sites({ mockAuth: !managedLinux }),
-      ...(process.platform === 'win32' && command === 'serve' ? [] : [cloudflare({
+      ...(!railwayNode ? [sites({ mockAuth: !managedLinux })] : []),
+      ...(railwayNode || (process.platform === 'win32' && command === 'serve') ? [] : [cloudflare({
         viteEnvironment: { name: "rsc", childEnvironments: ["ssr"] },
         inspectorPort: false,
         config: localBindingConfig,
