@@ -1,5 +1,6 @@
 import {body,db,fail,HttpError,textValue,sameOrigin} from '@/lib/server';
 import {initAccounts,currentAccount,hashPassword,verifyPassword,digest,randomToken,createSession,sessionCookie,throttle} from '@/lib/accounts';
+import {sendRecoveryEmail} from '@/lib/email';
 export async function GET(){try{const user=await currentAccount();return Response.json({user},{headers:{'Cache-Control':'no-store'}})}catch(e){return fail(e)}}
 export async function POST(request:Request){try{
  if(!sameOrigin(request))throw new HttpError(403,'Invalid request origin.');
@@ -14,6 +15,7 @@ export async function POST(request:Request){try{
  if(row)throw new HttpError(409,'Unable to register this email. Try signing in or recovering your account.');
  const id=crypto.randomUUID(),recoveryCode=randomToken();
  await db().prepare('INSERT INTO users (id,email,name,password,recovery,created_at) VALUES (?,?,?,?,?,?)').bind(id,email,textValue(b.name,80),await hashPassword(password),await digest(recoveryCode),new Date().toISOString()).run();
+ await sendRecoveryEmail(email,recoveryCode);
  return response({recoveryCode},await createSession(id,request));
  }
  if(action==='recover'){

@@ -33,3 +33,7 @@ Scores average documented available checks and exclude missing sources. They are
 Run the package's install, dev, and build scripts with its lockfile. Production uses the declared D1 binding and generated Drizzle migration. Windows preview uses a project-local SQLite adapter because the local Workers runtime failed on this host; production never includes that adapter. Sign in through the local sign-in link to exercise persistent preview features.
 
 Before a public launch, complete the remaining Phase 1 capabilities, production infrastructure and security review, controlled crawler egress, background job processing, monitoring, accessibility review, and operational recovery testing. Do not market this release as the entire 55-section platform.
+
+## Email recovery
+
+Recovery emails use Resend when `RESEND_API_KEY` and `EMAIL_FROM` are configured. Add both variables to the Railway service; `EMAIL_FROM` must use a verified Resend domain. If they are absent or delivery fails, the one-time recovery code remains available on-screen after registration.
