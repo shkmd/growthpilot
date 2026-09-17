@@ -1,8 +1,8 @@
-import {body,db,fail,HttpError,textValue} from '@/lib/server';
+import {body,db,fail,HttpError,textValue,sameOrigin} from '@/lib/server';
 import {initAccounts,currentAccount,hashPassword,verifyPassword,digest,randomToken,createSession,sessionCookie,throttle} from '@/lib/accounts';
 export async function GET(){try{const user=await currentAccount();return Response.json({user},{headers:{'Cache-Control':'no-store'}})}catch(e){return fail(e)}}
 export async function POST(request:Request){try{
- if(request.headers.get('origin')!==new URL(request.url).origin)throw new HttpError(403,'Invalid request origin.');
+ if(!sameOrigin(request))throw new HttpError(403,'Invalid request origin.');
  await initAccounts();const b=await body(request),action=b.action;
  const response=(data:unknown,cookie?:string)=>Response.json(data,{headers:{'Cache-Control':'no-store',...(cookie?{'Set-Cookie':cookie}:{})}});
  if(['register','login','recover'].includes(action)){
