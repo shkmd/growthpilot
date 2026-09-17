@@ -8,6 +8,13 @@
       "when": 1789374087164,
       "tag": "0000_magenta_epoch",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1789559999092,
+      "tag": "0001_workspace_records",
+      "breakpoints": true
     }
   ]
 }

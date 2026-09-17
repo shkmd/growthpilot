@@ -26,6 +26,17 @@ test('crawl extracts real metadata, respects robots, and reports HTTP errors',as
  try{const data=await crawl('https://public.com');assert.equal(data.pages.length,2);assert.equal(data.pages[0].title,'A real title');assert.equal(data.pages[0].missingAlt,1);assert.ok(data.issues.some(i=>i.title==='Repair unavailable pages'));assert.ok(!requested.some(u=>u.endsWith('/private')));assert.ok(data.score>=0&&data.score<=100);assert.equal(data.source,'Observed HTML crawl; deterministic recommendations');}
  finally{globalThis.fetch=original;}
 });
+test('image inventory resolves and deduplicates website images, excluding external and inline sources',async()=>{
+ const original=globalThis.fetch;
+ globalThis.fetch=async(input)=>{
+  const url=String(input);
+  if(url.includes('dns-query'))return Response.json({Answer:[{type:1,data:'93.184.215.14'}]});
+  if(url.endsWith('/robots.txt'))return new Response('User-agent: *\nAllow: /');
+  if(url.endsWith('/sitemap.xml'))return new Response('<urlset/>');
+  return new Response('<img src="/hero.jpg"><img src="/hero.jpg#copy"><img src="https://other.com/a.jpg"><img src="data:image/png;base64,a">',{headers:{'Content-Type':'text/html'}});
+ };
+ try{const result=await crawl('https://public.com');assert.deepEqual(result.pages[0].imageUrls,['https://public.com/hero.jpg']);}finally{globalThis.fetch=original;}
+});
 test('DNS denial stops a crawl before fetching a private destination',async()=>{
  const original=globalThis.fetch;let calls=0;globalThis.fetch=async()=>{calls++;return Response.json({Answer:[{type:1,data:'10.0.0.4'}]})};
  try{await assert.rejects(()=>crawl('https://public.com'),/public internet address/);assert.equal(calls,1);}finally{globalThis.fetch=original}
