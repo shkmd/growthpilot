@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {readFileSync} from 'node:fs';
+import {accountStatements} from '../lib/account-schema.ts';
+test('website OAuth state and callback SQL work with foreign keys enabled',()=>{
+ const db=new DatabaseSync(':memory:');db.exec('PRAGMA foreign_keys=ON');
+ for(const sql of accountStatements)db.exec(sql);
+ db.prepare('INSERT INTO users VALUES (?,?,?,?,?,?,?,?)').run('user','a@example.com','Test','hash','recovery','member','active','now');
+ const source=readFileSync('app/api/analytics/route.ts','utf8');
+ const sql=[...source.matchAll(/prepare\('([^']+)'\)/g)].map(m=>m[1]);
+ db.prepare(sql.find(s=>s.startsWith('INSERT INTO google_project_oauth_states'))).run('state','user','website',Date.now()+600000);
+ assert.equal(db.prepare('SELECT user_id FROM google_project_oauth_states').get().user_id,'user');
+ const save=db.prepare(sql.find(s=>s.startsWith('INSERT INTO google_project_connections')));
+ save.run('user','website','access','refresh',123,null,'now','now');
+ save.run('user','website','new','refresh',456,null,'now','later');
+ assert.equal(db.prepare('SELECT access_token FROM google_project_connections').get().access_token,'new');
+ assert.equal(db.prepare('SELECT COUNT(*) AS n FROM google_project_connections').get().n,1);
+ db.close();
+});
