@@ -9,3 +9,29 @@
 @media(min-width:1500px){.auth-story{padding-left:14%;padding-right:14%}}
 @media(max-width:850px){.account-page.auth-designed{grid-template-columns:1fr}.auth-designed>.suite-brand{position:relative;top:auto;left:auto;margin:28px 32px;color:#262039!important}.auth-designed>.suite-brand>span{color:#7959e9}.auth-story{display:none}.auth-designed .account-card{margin:45px auto 70px;width:min(440px,calc(100% - 48px))}.auth-designed .account-card h1{font-size:32px}.account-page.auth-designed{align-content:start}}
 @media(prefers-reduced-motion:reduce){.auth-designed *{transition:none!important}}
+
+.account-page.account-settings{display:block;width:min(760px,100%);max-width:760px;margin:0 auto;padding:40px 24px 64px;min-height:100svh;color:#24243b;box-sizing:border-box}
+.account-settings>.suite-brand{display:flex;align-items:center;width:fit-content;margin:0 0 28px;font-size:32px;text-decoration:none}
+.account-page.account-settings .auth-wordmark{display:inline;font-size:18px;color:#29263d}
+.account-settings .account-card{box-sizing:border-box;width:100%;max-width:none;margin:0;padding:36px;background:#fff;border:1px solid #e7e5ee;border-radius:20px;box-shadow:0 12px 40px #25203d08}
+.account-settings .account-card h1{font-size:30px;letter-spacing:-1px;margin:0 0 8px;font-weight:700}
+.account-settings .account-card>p{color:#737087;line-height:1.6;overflow-wrap:anywhere}
+.account-settings .account-form{display:grid;gap:18px;margin:26px 0 30px}
+.account-settings .account-form label{display:grid;gap:9px;font-size:14px;font-weight:600;color:#363248}
+.account-settings .account-form input{box-sizing:border-box;width:100%;height:50px;padding:12px 14px;background:#fcfbff;color:#252138;border:1px solid #dedbe9;border-radius:10px;font:inherit}
+.account-settings input:focus{outline:3px solid #ebe5ff;border-color:#795ae8}
+.account-settings button{font:inherit;cursor:pointer;border:1px solid #dedbe9;border-radius:9px;padding:12px 18px;background:white;color:#48405d}
+.account-settings .account-form button{justify-self:start}
+.account-settings button.suite-primary{background:#6444dc;border-color:#6444dc;color:white;font-weight:600;box-shadow:0 3px 8px #6444dc20}
+.account-settings button.suite-primary:hover{background:#5434cc}
+.account-settings button:disabled{opacity:.55;cursor:wait}
+.account-settings button:focus-visible,.account-settings a:focus-visible{outline:3px solid #ac96f7;outline-offset:3px}
+.account-settings .account-card h2{border-top:1px solid #eeecf4;padding-top:28px;margin:0 0 8px;font-size:20px;font-weight:650}
+.account-settings small{color:#777086;line-height:1.6;font-size:13px}
+.account-settings .account-card>button{color:#a13750;background:#fff7f8;border-color:#f0d9de}
+.account-settings .account-card>p:last-child{margin-top:24px}
+.account-settings a{color:#6044ce;text-decoration:none}
+.account-settings [role=status]{background:#edf9f2;color:#22613e!important;padding:14px 16px;border-radius:10px;border:1px solid #cfe9d9}
+.account-settings [role=alert]{padding:14px 16px;background:#fff1f2;border:1px solid #f0ccd2;color:#962b43!important;border-radius:10px}
+.account-settings>.suite-panel:not(.account-card){padding:24px;margin-top:24px;border-radius:16px}
+@media(max-width:600px){.account-page.account-settings{padding:24px 16px 40px}.account-settings .account-card{padding:24px 20px}.account-settings .account-form button{width:100%}.account-settings .account-card h1{font-size:26px}}
