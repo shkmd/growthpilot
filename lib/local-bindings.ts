@@ -58,6 +58,7 @@ class Statement {
   bind(...values:unknown[]){this.values=values;return this}
   async first(){return sqlite.prepare(this.sql).get(...this.values as any[])||null}
   async all(){return {results:sqlite.prepare(this.sql).all(...this.values as any[])}}
-  async run(){const r=sqlite.prepare(this.sql).run(...this.values as any[]);return {success:true,meta:{changes:Number(r.changes)}}}
+  execute(){const r=sqlite.prepare(this.sql).run(...this.values as any[]);return {success:true,meta:{changes:Number(r.changes)}}}
+  async run(){return this.execute()}
 }
-export const env={DB:{prepare:(sql:string)=>new Statement(sql)}};
+export const env={DB:{prepare:(sql:string)=>new Statement(sql),async batch(statements:Statement[]){sqlite.exec('BEGIN IMMEDIATE');try{const results=statements.map(s=>s.execute());sqlite.exec('COMMIT');return results}catch(e){sqlite.exec('ROLLBACK');throw e}}}};
