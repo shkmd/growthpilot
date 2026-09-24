@@ -9,3 +9,18 @@
 .audit-block:has(.audit-category)>.audit-finding summary{font-size:12px;line-height:1.45}
 .audit-block:has(.audit-category)>.audit-finding summary small{font-size:11px}
 .audit-block:has(.audit-category)>p{font-size:12px;margin:6px 0}
+.db-workspace .audit-report{border-radius:16px;border-color:#e7e9ee;box-shadow:none}
+.db-workspace .audit-report>header{padding:20px 22px;background:#fff;border-bottom:1px solid #eef0f3}
+.db-workspace .audit-report h2{font-size:18px;letter-spacing:-.2px}
+.db-workspace .audit-report>header p{font-size:12px;margin:6px 0}
+.db-workspace .audit-tabs{padding:12px 22px}
+.db-workspace .audit-scores{padding:18px 22px;gap:12px;border-bottom:1px solid #eef0f3}
+.db-workspace .audit-ring{width:58px;height:58px;border-width:5px;font-size:21px;background:#fff}
+.db-workspace .audit-score{gap:5px;font-size:12px}
+.db-workspace .audit-score small{font-size:10px}
+.db-workspace .audit-block{padding:20px 22px}
+.db-workspace .audit-block h3{font-size:14px}
+.db-workspace .audit-values{grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
+.db-workspace .audit-values>div{padding:12px;border:1px solid #eef0f3;background:#f8f9fb}
+.db-workspace .audit-values strong{font-size:16px}
+.db-workspace .audit-category>span{font-size:16px}
