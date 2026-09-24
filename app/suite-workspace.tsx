@@ -36,7 +36,7 @@ export default function SuiteWorkspace({signedIn=false}:{signedIn?:boolean}){
  const [draft,setDraft]=useState(''),[topic,setTopic]=useState(''),[content,setContent]=useState('');
  const requestId=useRef(0);const audit=audits[0],config=recordTools[tool];const current=sections.find(s=>s.id===section)!;
  useEffect(()=>{if(!nav)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setNav(false)};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close)},[nav]);
- function go(id:string,name?:string){setSection(id);setTool(name||sections.find(s=>s.id===id)!.tools[0]);setFilter('');setNav(false);setError('');}
+ function go(id:string,name?:string){if(name==='Google Analytics'||(id==='traffic'&&!name)){window.location.assign('/analytics'+(project?'?projectId='+encodeURIComponent(project.id):''));return}setSection(id);setTool(name||sections.find(s=>s.id===id)!.tools[0]);setFilter('');setNav(false);setError('');}
  async function loadProject(p:Project){const seq=++requestId.current;setProject(p);setLoading(true);setAudits([]);setRecords([]);setTasks([]);setError('');try{const [d,r]=await Promise.all([api('projects/'+p.id),api('records?projectId='+p.id)]);if(seq===requestId.current){setAudits(d.audits);setTasks(d.tasks);setRecords(r.records)}}catch(e){if(seq===requestId.current)setError((e as Error).message)}finally{if(seq===requestId.current)setLoading(false)}}
  useEffect(()=>{let active=true;api('projects').then(d=>{if(!active)return;setProjects(d.projects);const q=new URLSearchParams(window.location.search);const returned=q.get('analytics')==='connected';const target=returned?d.projects.find((p:Project)=>p.id===q.get('projectId')):null;if(returned){go('apps','Data Sources');if(target)toast.success('Google authorized. Select the GA4 property for this website.');q.delete('analytics');q.delete('projectId');window.history.replaceState(null,'',window.location.pathname+(q.size?'?'+q.toString():'')+window.location.hash)}if(target||d.projects[0])void loadProject(target||d.projects[0]);else setLoading(false)}).catch(e=>{if(active){setError(e.message);setLoading(false)}});return()=>{active=false;requestId.current++}},[]);
  useEffect(()=>{if(tool!=='Data Sources'||!project)return;api('analytics?projectId='+encodeURIComponent(project.id)).then(d=>setAnalyticsConnected(!!d.connected)).catch(()=>setAnalyticsConnected(false))},[tool,project?.id]);
@@ -81,6 +81,7 @@ export default function SuiteWorkspace({signedIn=false}:{signedIn?:boolean}){
  <Dialog open={!!issue} onOpenChange={open=>{if(!open)setIssue(null)}}><DialogContent className="suite-dialog"><DialogTitle>{issue?.title}</DialogTitle><DialogDescription>{issue?.why}</DialogDescription><h3>Recommended fix</h3><p>{issue?.fix}</p><h3>Observed on</h3><ul>{issue?.urls.map((url:string)=><li key={url}><a href={url} target="_blank" rel="noreferrer">{url}</a></li>)}</ul><button className="suite-primary" disabled={busy||!project} onClick={()=>void perform(async()=>{const d=await api('tasks','POST',{projectId:project!.id,title:issue.title,priority:issue.severity,url:issue.urls[0]||''});setTasks(t=>t.some(x=>x.id===d.task.id)?t:[d.task,...t]);setIssue(null);toast.success('Added to action plan')})}>Add to action plan</button></DialogContent></Dialog>
  </div>;
 }
+
 
 
 

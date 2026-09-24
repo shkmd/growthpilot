@@ -2,7 +2,7 @@ export const sections = [
   {id:'home',label:'Home',description:'Your websites and latest results',tools:['Dashboard']},
   {id:'seo',label:'SEO',description:'Audit, research, and improve search performance',tools:['Site Audit','Top Pages','Position Tracking','Keyword Overview','Keyword Research','Keyword Lists','Competitors','Backlinks','Action Plan']},
   {id:'ai',label:'AI Visibility',description:'Track prompts and record brand mentions',tools:['Prompt Research','Prompt Tracking','Brand Mentions']},
-  {id:'traffic',label:'Traffic & Market',description:'Analyze measured acquisition and engagement',tools:['Website Performance','Traffic Analytics','Country Rankings','Marketing Channels','Organic Search','Paid Search','Referrals','Social Traffic','Market Research']},
+  {id:'traffic',label:'Traffic & Market',description:'Analyze measured acquisition and engagement',tools:['Google Analytics','Website Performance','Traffic Analytics','Country Rankings','Marketing Channels','Organic Search','Paid Search','Referrals','Social Traffic','Market Research']},
   {id:'local',label:'Local',description:'Manage listings, reviews, and local search work',tools:['Business Listings','Review Management','Local Rank Tracking']},
   {id:'content',label:'Content',description:'Plan, write, and optimize your content',tools:['My Content','SEO Brief Generator','Content Optimizer','Topic Research']},
   {id:'ads',label:'Advertising',description:'Plan campaigns and analyze campaign results',tools:['Campaign Planner','Advertising Research']},
@@ -66,3 +66,4 @@ export function validateRecord(kind:unknown,data:unknown){
  if(kind==='review'&&(Number(out.rating)<1||Number(out.rating)>5))throw Error('Ratings must be between 1 and 5.');
  return out;
 }
+
