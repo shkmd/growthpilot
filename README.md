@@ -37,3 +37,10 @@ Before a public launch, complete the remaining Phase 1 capabilities, production 
 ## Email recovery
 
 Recovery emails use Resend when `RESEND_API_KEY` and `EMAIL_FROM` are configured. Add both variables to the Railway service; `EMAIL_FROM` must use a verified Resend domain. If they are absent or delivery fails, the one-time recovery code remains available on-screen after registration.
+
+## Full-site crawler
+SEO → Site Audit → Full-site crawler discovers same-origin URLs through HTML links and XML sitemaps. Choose 100, 500, 1,000 or 2,000 pages. One active crawl per account, paced at one URL per request with a one-second client delay. Existing audit-start limits apply. The crawler respects robots.txt and excludes query-string links, non-HTML assets and JavaScript-only links. Sitemap discovery is bounded to 50 sitemaps / 20,000 URLs; reports explicitly mark capped discovery as partial.
+
+Progress lives in `crawl_jobs` in the existing database. Keep the website's GrowthPilot workspace open while crawling; switching tools is supported. Closing the tab or switching websites stops after the current batch. Reopening that website continues; paused crawls require Resume. A short database lease prevents concurrent tabs from writing the same batch; interrupted requests can be retried after the two-minute lease expires. Completed results are saved as ordinary audits. Deleting a project also deletes its saved crawl.
+
+The page-by-page action report supports URL/issue filtering, direct evidence inspection and CSV export. Full crawls do not invoke PageSpeed for each page. Use the separate Run audit action for fresh Google entry-page measurements. HTML content checks are deterministic diagnostics, not a search-ranking prediction or a full Screaming Frog replacement.

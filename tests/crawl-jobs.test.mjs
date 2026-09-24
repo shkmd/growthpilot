@@ -1,0 +1,21 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {DatabaseSync} from 'node:sqlite';
+import {accountStatements} from '../lib/account-schema.ts';
+import {claimCrawlSQL,saveCrawlSQL,insertCrawlAuditSQL} from '../lib/crawl-job-sql.ts';
+test('crawl leases isolate owners, reject concurrent workers, and prevent paused/deleted jobs saving reports',()=>{
+ const d=new DatabaseSync(':memory:');for(const sql of accountStatements)d.exec(sql);
+ d.exec('CREATE TABLE audits(id TEXT,project_id TEXT,owner TEXT,created_at TEXT,score INTEGER,result TEXT)');
+ d.prepare("INSERT INTO crawl_jobs(project_id,owner,status,state,updated_at) VALUES ('p','alice','running','{}','now')").run();
+ const claim=d.prepare(claimCrawlSQL);assert.equal(claim.run('bad',1000,'p','bob',1).changes,0);assert.equal(claim.run('one',1000,'p','alice',1).changes,1);assert.equal(claim.run('two',1000,'p','alice',2).changes,0);
+ assert.equal(claim.run('two',2000,'p','alice',1001).changes,1);
+ const insert=d.prepare(insertCrawlAuditSQL),save=d.prepare(saveCrawlSQL);
+ assert.equal(insert.run('a','p','alice','now',90,'{}','p','alice','one').changes,0);
+ assert.equal(save.run('{}','complete','now','p','alice','one').changes,0);
+ d.exec("UPDATE crawl_jobs SET status='paused',lease='' WHERE project_id='p'");
+ assert.equal(insert.run('a','p','alice','now',90,'{}','p','alice','two').changes,0);
+ d.exec("UPDATE crawl_jobs SET status='running',lease='valid' WHERE project_id='p'");
+ d.exec('BEGIN');assert.equal(insert.run('a','p','alice','now',90,'{}','p','alice','valid').changes,1);assert.equal(save.run('{}','complete','now','p','alice','valid').changes,1);d.exec('COMMIT');
+ assert.equal(insert.run('a','p','alice','now',90,'{}','p','alice','valid').changes,0);
+ d.exec("DELETE FROM crawl_jobs WHERE project_id='p'");assert.equal(save.run('{}','complete','now','p','alice','valid').changes,0);assert.equal(d.prepare('SELECT COUNT(*) AS n FROM audits').get().n,1);d.close();
+});

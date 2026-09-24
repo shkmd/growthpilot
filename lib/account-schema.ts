@@ -11,3 +11,7 @@ export const accountStatements = [
 ];
 
 
+accountStatements.push(
+ `CREATE TABLE IF NOT EXISTS crawl_jobs (project_id TEXT PRIMARY KEY, owner TEXT NOT NULL, status TEXT NOT NULL, state TEXT NOT NULL, lease TEXT NOT NULL DEFAULT '', lease_until INTEGER NOT NULL DEFAULT 0, message TEXT NOT NULL DEFAULT '', updated_at TEXT NOT NULL)`,
+ `CREATE UNIQUE INDEX IF NOT EXISTS one_running_crawl_per_owner ON crawl_jobs(owner) WHERE status='running'`
+);
