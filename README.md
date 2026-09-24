@@ -28,6 +28,42 @@ Scores average documented available checks and exclude missing sources. They are
 
 `node --experimental-strip-types --test tests/crawler.test.mjs` verifies target validation, robots rules, metadata extraction, observed error reporting, and DNS rejection. TypeScript checking passes. A local HTTP integration run exercised authentication, origin enforcement, project quota and persistence, unknown-project isolation, a real example.com crawl, audit persistence, task creation/completion, and rate limits. Both PageSpeed requests returned HTTP 429 and were presented as unavailable.
 
+## Dashboard redesign
+
+The dashboard presentation follows `Dashboard-html/Main.dc.html` and the supplied dashboard screenshot. The `.dc.html` files are visual references only; their custom elements, template syntax, and runtime are not used by the application. `docs/dashboard-redesign.md` was not present when this redesign was implemented.
+
+Reusable presentation components live in `app/dashboard/`:
+
+| Component | Purpose |
+| --- | --- |
+| `Sidebar` | Grouped navigation, current section, collapse control, and observed audit coverage |
+| `TopBar` | Shared header wrapper retaining the existing search interaction |
+| `KpiTile`, `ScoreRing` | Lighthouse category scores and measurement states |
+| `TickGauge`, `BarChart` | Performance gauge and category comparison |
+| `FindingsTable` | Saved findings with severity, affected pages, and existing review actions |
+| `ImageGrid` | Unique audited image URLs, lazy previews, and a view-all control |
+| `AddWidgetDrawer` | Show or hide dashboard sections for the current workspace session |
+
+Design tokens are CSS variables in `app/dashboard/dashboard.css`. They define the reference accent, surfaces, text, borders, radii, and score colors. Responsive rules adapt the sidebar, cards, and image grid to smaller screens.
+
+`app/suite-workspace.tsx` supplies existing project, audit, task, and record data to these components. Scores come from the selected mobile or desktop PageSpeed result; missing measurements remain unavailable rather than becoming zero. Pages checked, findings, open actions, and image inventory come from saved records. Lighthouse scores describe the entry URL, not the whole website. Preview screenshots appear only when returned by a saved audit.
+
+The redesign changes presentation and local widget visibility only. Existing data fetching, routes, audit execution, ownership checks, and persistence remain unchanged. Widget visibility resets when the workspace is reloaded.
+
+### Redesign validation and commits
+
+The production build passed. The broader TypeScript check still reports existing errors in Analytics, crawler, password-reset, and related code; no errors were reported in the new dashboard components. Browser visual verification remains pending. This status supersedes the older TypeScript-pass statement above.
+
+The work was committed by section, starting with tokens and sidebar:
+
+1. `df0fe28` — Tokens and sidebar
+2. `29b1da5` — Top bar
+3. `3409ccd` — Score tiles, audit overview, and gauges
+4. `4a96c07` — Findings and recent activity
+5. `9a1d334` — Website image inventory
+6. `848572f` — Widget drawer and audit header controls
+7. `342730b` — Reference colors and layout polish
+
 ## Development and deployment
 
 Run the package's install, dev, and build scripts with its lockfile. Production uses the declared D1 binding and generated Drizzle migration. Windows preview uses a project-local SQLite adapter because the local Workers runtime failed on this host; production never includes that adapter. Sign in through the local sign-in link to exercise persistent preview features.
