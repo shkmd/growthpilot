@@ -2,6 +2,7 @@
 import {useEffect,useState} from 'react';
 import './suite.css';
 import './account-design.css';
+import './dashboard/pages.css';
 import {ArrowUpRight,ScanSearch,Layers,LockKeyhole} from 'lucide-react';
 type User={id:string,email:string,name:string,role:string,status:string};
 export default function AccountPanel({initialUser=null}:{initialUser?:User|null}){

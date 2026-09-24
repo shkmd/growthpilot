@@ -1,6 +1,7 @@
 'use client';
 import {useEffect,useState} from 'react';
 import '../account-design.css';
+import '../dashboard/pages.css';
 export default function ResetPassword(){
  const [token,setToken]=useState(''),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState(''),[done,setDone]=useState(false);
  useEffect(()=>{setToken(window.location.hash.slice(1));history.replaceState(null,'','/reset-password')},[]);
