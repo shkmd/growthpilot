@@ -3,6 +3,7 @@ export const sections = [
   {id:'seo',label:'SEO',description:'Audit, research, and improve search performance',tools:['Site Audit','Top Pages','Position Tracking','Keyword Overview','Keyword Research','Keyword Lists','Competitors','Backlinks','Action Plan']},
   {id:'ai',label:'AI Visibility',description:'Track prompts and record brand mentions',tools:['Prompt Research','Prompt Tracking','Brand Mentions']},
   {id:'traffic',label:'Traffic & Market',description:'Analyze measured acquisition and engagement',tools:['Google Analytics','Website Performance','Traffic Analytics','Country Rankings','Marketing Channels','Organic Search','Paid Search','Referrals','Social Traffic','Market Research']},
+  {id:'analytics',label:'Analytics',description:'Review Google Analytics and Search Console performance',tools:['Google Analytics']},
   {id:'local',label:'Local',description:'Manage listings, reviews, and local search work',tools:['Business Listings','Review Management','Local Rank Tracking']},
   {id:'content',label:'Content',description:'Plan, write, and optimize your content',tools:['My Content','SEO Brief Generator','Content Optimizer','Topic Research']},
   {id:'ads',label:'Advertising',description:'Plan campaigns and analyze campaign results',tools:['Campaign Planner','Advertising Research']},

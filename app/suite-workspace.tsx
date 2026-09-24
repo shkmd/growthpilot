@@ -1,6 +1,6 @@
 'use client';
 import {useEffect,useRef,useState} from 'react';
-import {House,Search,ChartNoAxesCombined,Sparkles,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Plus,ArrowUpRight,RefreshCw,Download,Settings,CheckCircle2,ExternalLink,Trash2,Pencil,Menu,X} from 'lucide-react';
+import {House,Search,ChartNoAxesCombined,BarChart3,Sparkles,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Plus,ArrowUpRight,RefreshCw,Download,Settings,CheckCircle2,ExternalLink,Trash2,Pencil,Menu,X} from 'lucide-react';
 import {Dialog,DialogContent,DialogTitle,DialogDescription} from '@/components/ui/dialog';
 import {Table,TableHeader,TableBody,TableRow,TableHead,TableCell} from '@/components/ui/table';
 import {Toaster,toast} from 'sonner';
@@ -19,7 +19,7 @@ import CrawlPages from './crawl-pages';
 type Project={id:string,name:string,url:string,country:string,language:string};
 type RecordRow={id:string,kind:string,data:Record<string,string>,created_at:string,updated_at:string};
 type Audit={id:string,score:number,created_at:string,pages:any[],issues:any[],scores:Record<string,number>,coverage?:string,performance?:any};
-const icons=[House,Search,Sparkles,ChartNoAxesCombined,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Settings];
+const icons=[House,Search,Sparkles,ChartNoAxesCombined,BarChart3,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Settings];
 async function api(path:string,method='GET',data?:unknown){const r=await fetch('/api/'+path,{method,headers:data?{'Content-Type':'application/json'}:undefined,body:data?JSON.stringify(data):undefined});const d:any=await r.json();if(!r.ok)throw Error(d.error||'The request failed. Try again.');return d;}
 function download(name:string,text:string,type='text/plain'){const u=URL.createObjectURL(new Blob([text],{type}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 function csv(rows:unknown[][]){return rows.map(r=>r.map(v=>'"'+String(v??'').replace(/^[=+@-]/,"'$&").replace(/"/g,'""')+'"').join(',')).join('\r\n');}
@@ -36,7 +36,7 @@ export default function SuiteWorkspace({signedIn=false}:{signedIn?:boolean}){
  const [draft,setDraft]=useState(''),[topic,setTopic]=useState(''),[content,setContent]=useState('');
  const requestId=useRef(0);const audit=audits[0],config=recordTools[tool];const current=sections.find(s=>s.id===section)!;
  useEffect(()=>{if(!nav)return;const close=(event:KeyboardEvent)=>{if(event.key==='Escape')setNav(false)};document.addEventListener('keydown',close);return()=>document.removeEventListener('keydown',close)},[nav]);
- function go(id:string,name?:string){if(name==='Google Analytics'||(id==='traffic'&&!name)){window.location.assign('/analytics'+(project?'?projectId='+encodeURIComponent(project.id):''));return}setSection(id);setTool(name||sections.find(s=>s.id===id)!.tools[0]);setFilter('');setNav(false);setError('');}
+ function go(id:string,name?:string){if(name==='Google Analytics'||id==='analytics'||(id==='traffic'&&!name)){window.location.assign('/analytics'+(project?'?projectId='+encodeURIComponent(project.id):''));return}setSection(id);setTool(name||sections.find(s=>s.id===id)!.tools[0]);setFilter('');setNav(false);setError('');}
  async function loadProject(p:Project){const seq=++requestId.current;setProject(p);setLoading(true);setAudits([]);setRecords([]);setTasks([]);setError('');try{const [d,r]=await Promise.all([api('projects/'+p.id),api('records?projectId='+p.id)]);if(seq===requestId.current){setAudits(d.audits);setTasks(d.tasks);setRecords(r.records)}}catch(e){if(seq===requestId.current)setError((e as Error).message)}finally{if(seq===requestId.current)setLoading(false)}}
  useEffect(()=>{let active=true;api('projects').then(d=>{if(!active)return;setProjects(d.projects);const q=new URLSearchParams(window.location.search);const returned=q.get('analytics')==='connected';const target=returned?d.projects.find((p:Project)=>p.id===q.get('projectId')):null;if(returned){go('apps','Data Sources');if(target)toast.success('Google authorized. Select the GA4 property for this website.');q.delete('analytics');q.delete('projectId');window.history.replaceState(null,'',window.location.pathname+(q.size?'?'+q.toString():'')+window.location.hash)}if(target||d.projects[0])void loadProject(target||d.projects[0]);else setLoading(false)}).catch(e=>{if(active){setError(e.message);setLoading(false)}});return()=>{active=false;requestId.current++}},[]);
  useEffect(()=>{if(tool!=='Data Sources'||!project)return;api('analytics?projectId='+encodeURIComponent(project.id)).then(d=>setAnalyticsConnected(!!d.connected)).catch(()=>setAnalyticsConnected(false))},[tool,project?.id]);
