@@ -1,0 +1,9 @@
+'use client';
+import {useState} from 'react';
+import {House,Search,Sparkles,ChartNoAxesCombined,BarChart3,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Settings,PanelLeftClose,TrendingUp} from 'lucide-react';
+import {sections} from '@/lib/suite';
+const icons=[House,Search,Sparkles,ChartNoAxesCombined,BarChart3,MapPin,FileText,Megaphone,MessagesSquare,Users,PanelsTopLeft,Settings];
+export function Sidebar({active,onNavigate,pages=0,findings=0}:{active:string,onNavigate:(id:string)=>void,pages?:number,findings?:number}){
+ const [collapsed,setCollapsed]=useState(false);
+ return <aside className={'db-sidebar '+(collapsed?'is-collapsed':'')}><div className="db-brand"><span className="db-logo"><TrendingUp size={18}/></span><strong>GrowthPilot</strong><button aria-label={collapsed?'Expand sidebar':'Collapse sidebar'} onClick={()=>setCollapsed(!collapsed)}><PanelLeftClose size={18}/></button></div><nav aria-label="Main navigation">{[['Overview',['home']],['Grow',['seo','ai','traffic','analytics','local','content']],['Promote',['ads','pr','social']],['Workspace',['reports','apps']]].map(([label,ids])=><div key={String(label)}><p className="db-nav-label">{label}</p>{(ids as string[]).map(id=>{const i=sections.findIndex(s=>s.id===id),s=sections[i],Icon=icons[i];return <button key={id} title={s.label} aria-current={active===id?'page':undefined} className={active===id?'active':''} onClick={()=>onNavigate(id)}><Icon size={18}/><span>{id==='home'?'Dashboard':s.label}</span>{id==='seo'&&findings>0&&<small>{findings}</small>}</button>})}</div>)}</nav><div className="db-sidebar-bottom"><a href="/account"><Settings size={18}/><span>Settings</span></a><div className="db-usage"><strong>Latest audit</strong><p>{pages} pages checked</p><small>Observed HTML coverage</small></div></div></aside>
+}
