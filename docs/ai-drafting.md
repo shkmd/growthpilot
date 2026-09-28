@@ -6,6 +6,8 @@ Content → AI Writer uses a saved My Content record as a source brief and the l
 
 Article and description generation share the 20-attempt daily limit. Articles use a 60-second timeout, 2,500 output-token cap and 8,000-character storage limit. Incomplete or oversized outputs are rejected. No additional environment variables are required.
 
+Content → AI Post Writer uses the same saved brief and brand context to create editable LinkedIn (up to 2,000 characters) or X (up to 250 characters) drafts. Choose a channel and planned date, review the result, then save it to Social → Social Calendar. Drafts are never published automatically.
+
 Set server-only OPENAI_API_KEY and OPENAI_MODEL to a Responses API model available to your account. Never use a public frontend environment variable for the key.
 
 After deployment, open SEO → Brand Profile and save the website's approved context. Under SEO Toolkit → Description editor, select a successfully crawled page and choose Generate AI draft.

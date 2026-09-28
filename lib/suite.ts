@@ -8,7 +8,7 @@ export const sections = [
   {id:'content',label:'Content',description:'Plan, write, and optimize your content',tools:['My Content','AI Writer','SEO Brief Generator','Content Optimizer','Topic Research']},
   {id:'ads',label:'Advertising',description:'Plan campaigns and analyze campaign results',tools:['Campaign Planner','Advertising Research']},
   {id:'pr',label:'AI PR',description:'Organize contacts, coverage, and outreach drafts',tools:['Media Contacts','Media Monitoring','Outreach Drafts']},
-  {id:'social',label:'Social',description:'Create posts and keep your publishing calendar',tools:['Social Calendar','Social Analytics']},
+  {id:'social',label:'Social',description:'Create posts and keep your publishing calendar',tools:['Social Calendar','AI Post Writer','Social Analytics']},
   {id:'reports',label:'Reports',description:'Export results from your actual website audits',tools:['Audit Reports','Saved Reports']},
   {id:'apps',label:'Apps',description:'Connect your sources of truth',tools:['Data Sources']},
 ] as const;
