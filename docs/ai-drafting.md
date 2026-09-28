@@ -1,5 +1,11 @@
 # AI description drafting
 
+## Article writer
+
+Content → AI Writer uses a saved My Content record as a source brief and the latest brand profile for that website. Generate, review and edit, then save as a new My Content draft. The original record is preserved. Technical briefs produce implementation guides. This does not publish to a CMS.
+
+Article and description generation share the 20-attempt daily limit. Articles use a 60-second timeout, 2,500 output-token cap and 8,000-character storage limit. Incomplete or oversized outputs are rejected. No additional environment variables are required.
+
 Set server-only OPENAI_API_KEY and OPENAI_MODEL to a Responses API model available to your account. Never use a public frontend environment variable for the key.
 
 After deployment, open SEO → Brand Profile and save the website's approved context. Under SEO Toolkit → Description editor, select a successfully crawled page and choose Generate AI draft.
